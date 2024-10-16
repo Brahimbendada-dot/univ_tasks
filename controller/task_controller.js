@@ -128,6 +128,7 @@ const downloadFiles =async(req,res)=>{
         }
         const file = task.files[req.params.index]
         const filePath = path.join(__dirname,`./${file}`)
+        console.log(filePath.split('controller').join('uploads'))
         res.download(filePath.split('controller').join('uploads'))
     } catch (error) {
         res.status(400).json({
