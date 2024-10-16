@@ -68,7 +68,21 @@ const updateTask = async (req,res)=>{
 }
 const deleteTask = async (req,res)=>{
     try {
-        const  task = await Task.findByIdAndDelete(req.params.id.trim())
+        const  task = await Task.findById(req.params.id.trim())
+        task.files.map(filename=>{
+            const filePath = path.join(__dirname.split('controller').join('uploads'),filename)
+            fs.unlink(filePath,(err)=>{
+                if(err){
+                    return res.status(400).json({
+                        status:'fail',
+                        message:err.message
+                    })
+                }
+                
+            })
+            
+        })
+        await Task.findByIdAndDelete(req.params.id.trim())
         res.status(200).json({
             status:"success",
         })
