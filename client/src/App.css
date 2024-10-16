@@ -1,0 +1,83 @@
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+body{
+  font-family: "Rubik", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: weight;
+  font-style: normal;
+}
+.section{
+  padding: 25px;
+  width: 100%;
+  display: flex;
+}
+
+.left__section{
+  width: 20%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+
+  flex-direction: column;
+}
+.right__section{
+  width: 80%;
+
+}
+.image__profile{
+  width: 150px;
+  height: 150px;
+  border-radius: 100%;
+}
+.left__section img{
+  margin-bottom: 20px;
+}
+.left__section h6{
+  margin-bottom: 20px;
+}
+.module__button{
+  width: 100%;
+  height: 70PX;
+  padding: 20px 30px;
+  cursor: pointer;
+  border: none;
+  background-color: white;
+  border-bottom: 1px solid black;
+}
+
+
+.task {
+  padding-left:  30px;
+  padding-right: 30px;
+  border-bottom: 1px solid black;
+}
+
+.task a{
+  margin-left: 10px;
+}
+.file{
+  display: flex;
+}
+
+.task__name{
+  display: flex;
+  justify-content: space-between;
+}
+.tasks__files{
+  display: flex;
+  justify-content: space-between;
+}
+.download__button{
+  background-color: white;
+  border: none;
+  cursor: pointer;
+}
+.file__color__name{
+  color: grey;
+}
+.coloriage__span{
+  background-color: yellow;
+}
