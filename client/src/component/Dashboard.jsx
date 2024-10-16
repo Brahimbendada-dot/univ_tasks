@@ -14,7 +14,7 @@ const Dashboard = () => {
 
 
   const getTasksOfSpecificModule = (id) => {
-    axios.get(`http://localhost:4400/api/v1/tasks/moduletasks/${id}`)
+    axios.get(`https://univ-tasks.onrender.com/api/v1/tasks/moduletasks/${id}`)
       .then(res => {
         setTasks(res.data.data.tasks);
         setLoading(false)// res.data is the correct way to access the data // Logging the data to the console
@@ -27,7 +27,7 @@ const Dashboard = () => {
   }
 
   const downloadFile = (id, index, filename) => {
-    axios.get(`http://localhost:4400/api/v1/tasks/downloadFiles/${id}/${index}`, { responseType: 'blob' })
+    axios.get(`https://univ-tasks.onrender.com/api/v1/tasks/downloadFiles/${id}/${index}`, { responseType: 'blob' })
       .then(res => {
         const blob = new Blob([res.data], { type: res.data.type })
         const link = document.createElement("a");
@@ -42,7 +42,7 @@ const Dashboard = () => {
   }
   useEffect(() => {
     setLoading(true)
-    axios.get("http://localhost:4400/api/v1/modules")
+    axios.get("https://univ-tasks.onrender.com/api/v1/modules")
       .then(res => {
         setModules(res.data.data.modules);
         setLoading(false) // res.data is the correct way to access the data // Logging the data to the console
