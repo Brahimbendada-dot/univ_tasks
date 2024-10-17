@@ -132,7 +132,7 @@ const downloadFiles =async(req,res)=>{
         const filePath = path.join(__dirname,`./${file}`)
        const path = path.join(__dirname,`./${file}`).split('controller').join('uploads');
         if (!fs.existsSync(path)) {
-          fs.mkdirSync(path, { recursive: true });
+          console.log(`file not exist ${path}`)
         }
         console.log(filePath.split('controller').join('uploads'))
         res.download(filePath.split('controller').join('uploads'))
