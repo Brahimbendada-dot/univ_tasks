@@ -2,6 +2,16 @@ const Task = require('../model/task')
 const path = require("path")
 const fs = require('fs')
 const bucket = require('../utils/firebase_config')
+const { Storage } = require('@google-cloud/storage');
+
+// Initialize Google Cloud Storage
+const storage = new Storage({
+  projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
+  keyFilename: process.env.GOOGLE_CLOUD_KEYFILE 
+});
+
+const bucket = storage.bucket(process.env.GOOGLE_CLOUD_BUCKET_NAME);
+
 
 const createTask = async (req,res)=>{
     const newTask = new Task(req.body)
