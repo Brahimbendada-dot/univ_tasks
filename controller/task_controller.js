@@ -1,6 +1,7 @@
 const Task = require('../model/task')
 const path = require("path")
 const fs = require('fs')
+const bucket = require('../utils/firebase_config')
 
 const createTask = async (req,res)=>{
     const newTask = new Task(req.body)
@@ -96,50 +97,81 @@ const deleteTask = async (req,res)=>{
         })
     }
 }
-const uploadFiles = async(req,res)=>{
-    console.log(req.files)
-    const files = []
-    for(const file of req.files){
-        files.push(file.filename)
-    }
-    console.log(files)
+const uploadFiles = async (req, res) => {
     try {
-        const uploadFiles = await Task.findByIdAndUpdate(req.params.id,{files: files},{new :true})
+        const filesUrl = [];
+        const filesNameInMongo = []
+
+        // Loop through each file in req.files
+        for (const file of req.files) {
+            const filePath = path.join(__dirname.split('controller').join('uploads'), file.filename);
+            // Upload the file to Firebase Storage
+            const [uploadedFile] = await bucket.upload(filePath, {
+                destination: `uploads/${file.originalname}`, // Upload to 'uploads/' directory
+                metadata: {
+                    contentType: file.mimetype,
+                },
+            });
+
+            // Remove the local file after uploading
+            fs.unlinkSync(filePath);
+
+            // Get the public URL of the uploaded file
+            const publicUrl = `https://storage.googleapis.com/${bucket.name}/${uploadedFile.name}`;
+            filesUrl.push(publicUrl);
+            filesNameInMongo.push(file.originalname)
+        }
+        const uploadFiles = await Task.findByIdAndUpdate(req.params.id, { files: filesNameInMongo }, { new: true })
         res.status(201).json({
-            status:'success',
+            status: 'success',
             data: {
+                files_url : filesUrl,
                 uploadFiles,
             }
         })
     } catch (error) {
-        res.status(400).json({
-            status:'fail',
-            message:error.message
-        })
+        console.error('Error in file upload:', error);
+        return res.status(500).json({
+            status: 'fail',
+            message: error.message,
+        });
     }
 }
-
-const downloadFiles =async(req,res)=>{
+const downloadFiles = async (req, res) => {
     try {
         const task = await Task.findById(req.params.id);
-        if(!task){
-            res.status(400).json({
-                status:'fail',
-                message:'no task found'
+        if (!task) {
+            return res.status(400).json({
+                status: 'fail',
+                message: 'no task found'
             })
         }
-        const file = task.files[req.params.index]
-        const filePath = path.join(__dirname,`./${file}`)
-       const path = path.join(__dirname,`./${file}`).split('controller').join('uploads');
-        if (!fs.existsSync(path)) {
-          console.log(`file not exist ${path}`)
+       
+        const fileName = task.files[req.params.index]
+        const file = bucket.file(`uploads/${fileName}`)
+        console.log(file)
+        const [exist] = await file.exists()
+        if(!exist){
+            return res.status(400).json({
+                status: 'fail',
+                message: 'file no found in storage'
+            })
         }
-        console.log(filePath.split('controller').join('uploads'))
-        res.download(filePath.split('controller').join('uploads'))
+        const tempFilePath = path.join(__dirname.split('controller').join('uploads'),fileName)
+        console.log(tempFilePath)
+        await file.download({ destination: tempFilePath });
+        res.download(tempFilePath,(err)=>{
+            if(err){
+                return  res.status(500).json({
+                    status: 'fail download',
+                    message: err.message
+                })
+            }
+        })
     } catch (error) {
         res.status(400).json({
-            status:'fail',
-            message:error.message
+            status: 'fail',
+            message: error.message
         })
     }
 }
