@@ -27,6 +27,11 @@ app.use(express.static(path.join(__dirname, 'client/build')))
 // render client application
 app.get("*", (req, res) => res.sendFile(path.join(__dirname, 'client/build/index.html')))
 
+setInterval(() => {
+  app.get('/keep-alive', (req, res) => {
+    res.status(200).send('Server is alive');
+  });
+}, 300000);
 
 // start the server
 app.listen(process.env.PORT, () => {
