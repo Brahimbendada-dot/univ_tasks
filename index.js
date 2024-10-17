@@ -31,7 +31,7 @@ setInterval(() => {
   app.get('/keep-alive', (req, res) => {
     res.status(200).send('Server is alive');
   });
-}, 300000);
+}, 120000);
 
 // start the server
 app.listen(process.env.PORT, () => {
