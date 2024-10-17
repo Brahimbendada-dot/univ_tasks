@@ -130,6 +130,9 @@ const downloadFiles =async(req,res)=>{
         }
         const file = task.files[req.params.index]
         const filePath = path.join(__dirname,`./${file}`)
+        if (!fs.existsSync(path)) {
+            console.log(`not exist ${__dirname}`)
+        }
         console.log(filePath.split('controller').join('uploads'))
         res.download(filePath.split('controller').join('uploads'))
     } catch (error) {
