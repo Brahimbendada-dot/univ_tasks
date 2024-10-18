@@ -26,20 +26,31 @@ const Dashboard = () => {
       });
   }
 
-  const downloadFile = (id, index, filename) => {
+const downloadFile = (id, index, filename) => {
     axios.get(`https://univ-tasks.onrender.com/api/v1/tasks/downloadFiles/${id}/${index}`, { responseType: 'blob' })
       .then(res => {
-        const blob = new Blob([res.data], { type: res.data.type })
+        // Create a blob from the response data
+        const blob = new Blob([res.data], { type: res.headers['content-type'] });
         const link = document.createElement("a");
+        
+        // Create a URL for the blob and set it as the href
         link.href = window.URL.createObjectURL(blob);
-        link.download = filename
-        link.click()
+        link.download = filename; // Set the filename for download
+        
+        // Append the link to the body (necessary for Firefox)
+        document.body.appendChild(link);
+        link.click(); // Simulate a click on the link to start the download
+
+        // Clean up by removing the link and revoking the object URL
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(link.href);
       })
       .catch(error => {
-        console.log(error)
-        setLoading(false)
+        console.error('Download error:', error); // Improved error logging
+        setLoading(false);
       });
-  }
+};
+
   useEffect(() => {
     setLoading(true)
     axios.get("https://univ-tasks.onrender.com/api/v1/modules")
