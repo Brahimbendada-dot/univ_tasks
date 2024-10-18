@@ -7,6 +7,8 @@ const moduleRouter = require('./routes/module_route')
 const app = express()
 const path = require("path")
 
+
+
 console.log(__dirname)
 // use middlewere
 app.use(express.json())

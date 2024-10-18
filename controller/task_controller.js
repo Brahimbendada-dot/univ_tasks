@@ -105,23 +105,27 @@ const uploadFiles = async (req, res) => {
         const filesNameInMongo = []
 
         // Loop through each file in req.files
-        for (const file of req.files) {
-            const filePath = path.join(__dirname.split('controller').join('uploads'), file.filename);
-            // Upload the file to Firebase Storage
-            const [uploadedFile] = await bucket.upload(filePath, {
-                destination: `uploads/${file.originalname}`, // Upload to 'uploads/' directory
-                metadata: {
-                    contentType: file.mimetype,
-                },
-            });
+        console.log(req.files)
 
-            // Remove the local file after uploading
-            fs.unlinkSync(filePath);
-
-            // Get the public URL of the uploaded file
-            const publicUrl = `https://storage.googleapis.com/${bucket.name}/${uploadedFile.name}`;
-            filesUrl.push(publicUrl);
-            filesNameInMongo.push(file.originalname)
+        if(req.files){
+            for (const file of req.files) {
+                const filePath = path.join(__dirname.split('controller').join('uploads'), file.filename);
+                // Upload the file to Firebase Storage
+                const [uploadedFile] = await bucket.upload(filePath, {
+                    destination: `uploads/${file.originalname}`, // Upload to 'uploads/' directory
+                    metadata: {
+                        contentType: file.mimetype,
+                    },
+                });
+    
+                // Remove the local file after uploading
+                fs.unlinkSync(filePath);
+    
+                // Get the public URL of the uploaded file
+                const publicUrl = `https://storage.googleapis.com/${bucket.name}/${uploadedFile.name}`;
+                filesUrl.push(publicUrl);
+                filesNameInMongo.push(file.originalname)
+            }
         }
         const uploadFiles = await Task.findByIdAndUpdate(req.params.id, { files: filesNameInMongo }, { new: true })
         res.status(201).json({
@@ -148,10 +152,8 @@ const downloadFiles = async (req, res) => {
                 message: 'no task found'
             })
         }
-       
         const fileName = task.files[req.params.index]
         const file = bucket.file(`uploads/${fileName}`)
-        console.log(file)
         const [exist] = await file.exists()
         if(!exist){
             return res.status(400).json({
