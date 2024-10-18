@@ -8,6 +8,5 @@ admin.initializeApp({
   }),
   storageBucket: "note-3f2f5.appspot.com"
 });
-
 const bucket = admin.storage().bucket();
 module.exports = bucket;
