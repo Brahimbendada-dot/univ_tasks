@@ -86,7 +86,7 @@ const Dashboard = () => {
           }
         </section>
         <section className='right__section'>
-          <p>Note: In this Current new version you can add comments feedback for any home work</p>
+          <p className="note">Note: In this Current new version you can add comments feedback for any home work</p>
           {showCommentModel.show? <CommentModel onClose={() => setShowCommentModel(false)} name={showCommentModel.name} description={showCommentModel.description} id={showCommentModel.id}/>: <></>}
           {tasks && loading ? <div>...</div> :
             tasks.map((task, _task_index) => (
