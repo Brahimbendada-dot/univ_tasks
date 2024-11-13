@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 function CommentModel({onClose, name, description, id }) {
     const [comment, setComment] = useState('')
     const sendComment = ()=>{
-        if(comment != ''){
+        if(comment){
             axios.put(`https://univ-tasks.onrender.com/api/v1/tasks/reviews/${id}`,{
                 review:comment
             }).then(res=>{
