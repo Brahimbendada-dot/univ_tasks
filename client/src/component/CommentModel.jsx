@@ -17,11 +17,11 @@ function CommentModel({onClose, name, description, id }) {
         setComment(event.target.value)
     }
     return (
-        <div className='modee__comment task__name'>
+        <div className='model__comment task__name'>
             <div>
                 <div>{name} {description}</div>
-                <input type='text' placeholder='Enter Comment' value={comment} onChange={(event)=>handleComment(event)} />
-                <button type='submit' onClick={()=>sendComment()}>Send</button>
+                <input className = "comment__input" type='text' placeholder='Enter Comment' value={comment} onChange={(event)=>handleComment(event)} />
+                <button className = "send__comment__button" type='submit' onClick={()=>sendComment()}>Send</button>
             </div>
             <div>
                 <button onClick= {onClose}>X</button>
