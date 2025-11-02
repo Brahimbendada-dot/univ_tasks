@@ -135,6 +135,7 @@ const uploadFiles = async (req, res) => {
     }
 }
 const downloadFiles = async (req, res) => {
+    console.log("start downloading")
     try {
         const task = await Task.findById(req.params.id);
         if (!task) {
@@ -143,6 +144,7 @@ const downloadFiles = async (req, res) => {
                 message: 'no task found'
             })
         }
+        console.log(task)
         const fileName = task.files[req.params.index]
         const file = bucket.file(`uploads/${fileName}`)
         const [exist] = await file.exists()
@@ -152,6 +154,7 @@ const downloadFiles = async (req, res) => {
                 message: 'file no found in storage'
             })
         }
+        console.log(exist)
         const tempFilePath = path.join(__dirname.split('controller').join('uploads'),fileName)
         console.log(tempFilePath)
         await file.download({ destination: tempFilePath });
