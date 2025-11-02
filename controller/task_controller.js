@@ -147,6 +147,8 @@ const downloadFiles = async (req, res) => {
         console.log(task)
         const fileName = task.files[req.params.index]
         const file = bucket.file(`uploads/${fileName}`)
+        console.log("0000000000000000000000000")
+        console.log(file)
         const [exist] = await file.exists()
         if(!exist){
             return res.status(400).json({
